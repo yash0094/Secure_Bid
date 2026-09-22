@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #eef6ff;
+  --color-brand-100: #d9ecff;
+  --color-brand-200: #b3d8ff;
+  --color-brand-300: #7ebdff;
+  --color-brand-400: #3f97f5;
+  --color-brand-500: #0a6ed1;
+  --color-brand-600: #0857a8;
+  --color-brand-700: #084380;
+  --color-brand-800: #0a3563;
+  --color-brand-900: #0c2c50;
+
+  --color-ink-50: #f7f8fa;
+  --color-ink-100: #eef0f3;
+  --color-ink-200: #dfe3e9;
+  --color-ink-300: #c3cad4;
+  --color-ink-400: #98a3b3;
+  --color-ink-500: #6b7789;
+  --color-ink-600: #4d5766;
+  --color-ink-700: #363e4a;
+  --color-ink-800: #232833;
+  --color-ink-900: #14171d;
+
+  --color-success-500: #1a8a5f;
+  --color-success-100: #e2f6ee;
+  --color-warn-500: #b6790a;
+  --color-warn-100: #fbf0dc;
+  --color-danger-500: #c23a34;
+  --color-danger-100: #fbe6e4;
+
+  /* Per-role accents: bidder keeps brand blue; caller and official get their
+     own identity so the portal is recognisable by colour alone, the way a
+     bank's business vs. personal app differ without looking unrelated. */
+  --color-caller-50: #eafbf8;
+  --color-caller-100: #cef4ee;
+  --color-caller-500: #0d8c81;
+  --color-caller-600: #0a6f66;
+  --color-caller-700: #085951;
+
+  --color-official-50: #f3f0fb;
+  --color-official-100: #e4ddf6;
+  --color-official-500: #6a45c2;
+  --color-official-600: #55349f;
+  --color-official-700: #432a7d;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink-50);
+  color: var(--color-ink-800);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-ink-300); border-radius: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+.mono { font-family: var(--font-mono); }
+
+@keyframes splash-fade {
+  0% { opacity: 0; transform: scale(0.94); }
+  12% { opacity: 1; transform: scale(1); }
+  88% { opacity: 1; }
+  100% { opacity: 0; }
+}
