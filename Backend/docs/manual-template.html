@@ -1,0 +1,533 @@
+<title>SecureBid Field Manual</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-900:#14171d; --ink-800:#232833; --ink-700:#363e4a; --ink-600:#4d5766;
+    --ink-500:#6b7789; --ink-400:#98a3b3; --ink-300:#c3cad4; --ink-200:#dfe3e9;
+    --ink-100:#eef0f3; --ink-50:#f7f8fa; --surface:#ffffff; --ground:#f7f8fa;
+
+    --brand-900:#0c2c50; --brand-700:#084380; --brand-600:#0857a8; --brand-500:#0a6ed1;
+    --brand-100:#d9ecff; --brand-50:#eef6ff;
+
+    --caller-600:#0a6f66; --caller-500:#0d8c81; --caller-100:#cef4ee; --caller-50:#eafbf8;
+    --official-600:#55349f; --official-500:#6a45c2; --official-100:#e4ddf6; --official-50:#f3f0fb;
+
+    --success:#1a8a5f; --success-100:#e2f6ee;
+    --warn:#b6790a; --warn-100:#fbf0dc;
+    --danger:#c23a34; --danger-100:#fbe6e4;
+
+    --font-serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+    --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    --font-mono:ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink-900:#eef0f3; --ink-800:#dfe3e9; --ink-700:#c3cad4; --ink-600:#98a3b3;
+      --ink-500:#6b7789; --ink-400:#4d5766; --ink-300:#363e4a; --ink-200:#2a303b;
+      --ink-100:#1c212a; --ink-50:#14171d; --surface:#1a1f28; --ground:#0f1216;
+      --brand-100:#0c2c50; --brand-50:#0a2440;
+      --caller-100:#0d3530; --caller-50:#0a2925;
+      --official-100:#2c2249; --official-50:#231c3a;
+      --success-100:#0f2e22; --warn-100:#3a2a0c; --danger-100:#3a1613;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink-900:#eef0f3; --ink-800:#dfe3e9; --ink-700:#c3cad4; --ink-600:#98a3b3;
+    --ink-500:#6b7789; --ink-400:#4d5766; --ink-300:#363e4a; --ink-200:#2a303b;
+    --ink-100:#1c212a; --ink-50:#14171d; --surface:#1a1f28; --ground:#0f1216;
+    --brand-100:#0c2c50; --brand-50:#0a2440;
+    --caller-100:#0d3530; --caller-50:#0a2925;
+    --official-100:#2c2249; --official-50:#231c3a;
+    --success-100:#0f2e22; --warn-100:#3a2a0c; --danger-100:#3a1613;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink-800);font-family:var(--font-sans);
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  img{max-width:100%;}
+  [hidden]{display:none!important;}
+  a{color:var(--brand-500);}
+  h1,h2,h3{font-family:var(--font-serif);color:var(--ink-900);text-wrap:balance;line-height:1.2;}
+  code, .mono{font-family:var(--font-mono);}
+
+  .shell{display:flex;min-height:100%;}
+
+  nav.toc{
+    width:272px; flex:none; position:sticky; top:0; align-self:flex-start;
+    height:100vh; overflow-y:auto; border-right:1px solid var(--ink-200);
+    background:var(--surface); padding:20px 14px 30px;
+  }
+  .toc-brand{display:flex;align-items:center;gap:10px;padding:6px 10px 18px;}
+  .toc-brand .name{font-family:var(--font-serif);font-weight:600;font-size:17px;color:var(--ink-900);}
+  .toc-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-400);padding:14px 10px 6px;}
+  .toc a{display:block;padding:6px 10px;border-radius:6px;font-size:13px;color:var(--ink-600);
+    text-decoration:none;font-weight:500;}
+  .toc a:hover{background:var(--ink-50);color:var(--ink-800);}
+  .toc a.active{background:var(--brand-50);color:var(--brand-600);}
+  .toc a.sub{padding-left:20px;font-weight:400;font-size:12.5px;}
+  .toc-role.bidder{border-left:3px solid var(--brand-500);}
+  .toc-role.caller{border-left:3px solid var(--caller-500);}
+  .toc-role.official{border-left:3px solid var(--official-500);}
+
+  main{flex:1;min-width:0;display:flex;justify-content:center;}
+  .content{width:100%;max-width:760px;padding:56px 24px 120px;}
+
+  .kicker{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-600);}
+  h1.title{font-size:34px;margin:8px 0 6px;}
+  p.lede{font-size:16.5px;color:var(--ink-600);max-width:62ch;}
+
+  .role-table{width:100%;border-collapse:collapse;margin:22px 0 8px;font-size:13.5px;}
+  .role-table th{text-align:left;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--ink-500);padding:0 10px 8px 0;font-weight:600;border-bottom:1px solid var(--ink-200);}
+  .role-table td{padding:10px 10px 10px 0;border-bottom:1px solid var(--ink-100);vertical-align:top;}
+  .role-table tr:last-child td{border-bottom:none;}
+  .role-chip{display:inline-block;padding:2px 9px;border-radius:99px;font-weight:600;font-size:12px;white-space:nowrap;}
+  .role-chip.bidder{background:var(--brand-50);color:var(--brand-600);}
+  .role-chip.caller{background:var(--caller-100);color:var(--caller-600);}
+  .role-chip.official{background:var(--official-100);color:var(--official-600);}
+
+  section.role{margin-top:64px;padding-top:8px;border-top:1px solid var(--ink-200);}
+  .role-band{display:flex;align-items:baseline;gap:10px;margin-bottom:4px;}
+  .role-num{font-family:var(--font-serif);font-weight:600;font-size:15px;color:var(--ink-400);}
+  section.role h2{font-size:26px;margin:0 0 4px;}
+  section.role .role-sub{color:var(--ink-500);font-size:14px;margin:0 0 28px;max-width:60ch;}
+  section.role.bidder{border-top-color:var(--brand-500);}
+  section.role.caller{border-top-color:var(--caller-500);}
+  section.role.official{border-top-color:var(--official-500);}
+
+  .step{margin:34px 0;}
+  .step h3{font-size:18px;margin:0 0 4px;display:flex;align-items:baseline;gap:8px;}
+  .step h3 .step-no{font-family:var(--font-mono);font-size:12px;color:var(--ink-400);font-weight:400;}
+  .step p, .step li{color:var(--ink-700);font-size:14.5px;}
+  .step ul{padding-left:20px;margin:8px 0;}
+  .step li{margin:4px 0;}
+
+  figure{margin:16px 0 0;}
+  figure img{display:block;width:100%;border:1px solid var(--ink-200);border-radius:10px;
+    box-shadow:0 1px 2px rgba(20,23,29,.06), 0 8px 24px -12px rgba(20,23,29,.18);}
+  figcaption{font-size:12px;color:var(--ink-500);margin-top:8px;text-align:center;}
+  .fig-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .fig-row figure{flex:1 1 260px;margin-top:16px;}
+  .fig-narrow{max-width:340px;margin-left:auto;margin-right:auto;}
+
+  .callout{background:var(--brand-50);border:1px solid var(--brand-100);border-radius:8px;
+    padding:12px 14px;font-size:13.5px;color:var(--ink-700);margin:14px 0;}
+  .callout.warn{background:var(--warn-100);border-color:color-mix(in srgb, var(--warn) 30%, var(--warn-100));}
+  .callout.caller{background:var(--caller-50);border-color:var(--caller-100);}
+  .callout.official{background:var(--official-50);border-color:var(--official-100);}
+  .callout strong{color:var(--ink-900);}
+
+  .creds{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0;}
+  .creds th,.creds td{padding:7px 10px;border-bottom:1px solid var(--ink-100);text-align:left;}
+  .creds th{color:var(--ink-500);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;}
+  .creds td.mono{font-size:12.5px;}
+
+  .navmap{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;}
+  .navmap th,.navmap td{padding:8px 10px;border-bottom:1px solid var(--ink-100);text-align:left;vertical-align:top;}
+  .navmap th{color:var(--ink-500);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;}
+
+  dl.glossary{margin:0;}
+  dl.glossary dt{font-family:var(--font-serif);font-weight:600;color:var(--ink-900);font-size:15.5px;margin-top:20px;}
+  dl.glossary dd{margin:4px 0 0;color:var(--ink-600);font-size:14px;max-width:62ch;}
+
+  footer{margin-top:70px;padding-top:24px;border-top:1px solid var(--ink-200);
+    font-size:12.5px;color:var(--ink-400);}
+
+  .menu-btn{display:none;}
+
+  @media (max-width: 860px){
+    nav.toc{position:fixed;inset:0 auto 0 0;transform:translateX(-100%);transition:transform .2s ease;z-index:40;}
+    nav.toc.open{transform:translateX(0);box-shadow:0 0 40px rgba(20,23,29,.35);}
+    .menu-btn{display:flex;position:sticky;top:12px;left:12px;z-index:30;align-items:center;gap:8px;
+      width:fit-content;margin:12px 0 0 12px;background:var(--surface);border:1px solid var(--ink-200);
+      border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--ink-700);}
+    .content{padding:8px 20px 100px;}
+    .fig-row{flex-direction:column;}
+  }
+</style>
+
+<div class="shell">
+  <button class="menu-btn" id="menuBtn">&#9776; Contents</button>
+  <nav class="toc" id="toc">
+    <div class="toc-brand">
+      <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+        <rect x="9" y="6" width="34" height="46" rx="4" fill="var(--surface)" stroke="var(--brand-600)" stroke-width="3.2"/>
+        <path d="M33 6 L43 16 L33 16 Z" fill="var(--brand-100)" stroke="var(--brand-600)" stroke-width="2" stroke-linejoin="round"/>
+        <line x1="15" y1="24" x2="31" y2="24" stroke="var(--ink-400)" stroke-width="2.6" stroke-linecap="round"/>
+        <line x1="15" y1="31" x2="35" y2="31" stroke="var(--ink-400)" stroke-width="2.6" stroke-linecap="round"/>
+        <line x1="15" y1="38" x2="27" y2="38" stroke="var(--ink-400)" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M40 46 L36 58 L46 52 L56 58 L52 46 Z" fill="var(--brand-600)"/>
+        <circle cx="46" cy="42" r="15" fill="var(--brand-500)" stroke="var(--brand-900)" stroke-width="2"/>
+        <path d="M39 42 L44 47 L54 35" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="name">SecureBid</span>
+    </div>
+
+    <div class="toc-eyebrow">Start here</div>
+    <a href="#start" class="tocLink">Getting started</a>
+    <a href="#nav" class="tocLink">How to navigate the app</a>
+
+    <div class="toc-eyebrow">Bidder / Contractor</div>
+    <a href="#bidder" class="tocLink toc-role bidder">Overview</a>
+    <a href="#b-dashboard" class="tocLink sub toc-role bidder">Dashboard</a>
+    <a href="#b-discover" class="tocLink sub toc-role bidder">Discover</a>
+    <a href="#b-detail" class="tocLink sub toc-role bidder">Pricing recommendation</a>
+    <a href="#b-pipeline" class="tocLink sub toc-role bidder">Pipeline</a>
+    <a href="#b-anomaly" class="tocLink sub toc-role bidder">Anomaly (flagship)</a>
+    <a href="#b-more" class="tocLink sub toc-role bidder">Portfolio, Analytics &amp; more</a>
+
+    <div class="toc-eyebrow">Tender Caller</div>
+    <a href="#caller" class="tocLink toc-role caller">Overview</a>
+    <a href="#c-create" class="tocLink sub toc-role caller">Creating a tender</a>
+    <a href="#c-evaluate" class="tocLink sub toc-role caller">Evaluating &amp; awarding</a>
+
+    <div class="toc-eyebrow">Government Official</div>
+    <a href="#official" class="tocLink toc-role official">Overview</a>
+    <a href="#o-anomaly" class="tocLink sub toc-role official">System-wide anomaly detection</a>
+    <a href="#o-registry" class="tocLink sub toc-role official">Registry</a>
+
+    <div class="toc-eyebrow">Reference</div>
+    <a href="#security" class="tocLink">Account &amp; security</a>
+    <a href="#glossary" class="tocLink">Glossary</a>
+    <a href="#trouble" class="tocLink">Troubleshooting</a>
+  </nav>
+
+  <main>
+    <div class="content">
+
+      <div class="kicker">Field manual</div>
+      <h1 class="title">Finding your way around SecureBid</h1>
+      <p class="lede">SecureBid runs three separate portals from one app — a bidder discovering
+        and pricing tenders, a department publishing and awarding them, and an official watching
+        the whole system for bid-rigging patterns. Each portal has its own colour, its own
+        navigation, and its own job. This manual gets a first-time user of any one of them fluent,
+        screen by screen.</p>
+
+      <table class="role-table">
+        <tr><th>Role</th><th>Colour</th><th>Who this is</th><th>Sign in at</th></tr>
+        <tr><td><span class="role-chip bidder">Bidder</span></td><td>Blue</td>
+            <td>A company that bids on public tenders</td><td class="mono">/login</td></tr>
+        <tr><td><span class="role-chip caller">Tender&nbsp;Caller</span></td><td>Teal</td>
+            <td>A department or PSU publishing tenders</td><td class="mono">/login/buyer</td></tr>
+        <tr><td><span class="role-chip official">Official</span></td><td>Violet</td>
+            <td>Cross-department oversight, read-only</td><td class="mono">/login/official</td></tr>
+      </table>
+
+      <section id="start" class="step" style="margin-top:48px;">
+        <h3><span class="step-no">01</span> Signing in</h3>
+        <p>The logo plays for about three seconds on a genuinely fresh browser session, then drops
+          you at your portal's sign-in page — a bookmarked or shared link skips straight past it on
+          later visits. Each sign-in page carries its own colour and description, plus a pill
+          switcher at the bottom to jump portals.</p>
+        <div class="fig-row">
+          <figure><img src="__IMG_login-bidder__" alt="Bidder sign-in page"><figcaption>Bidder — blue</figcaption></figure>
+          <figure><img src="__IMG_login-caller__" alt="Tender Caller sign-in page"><figcaption>Tender Caller — teal</figcaption></figure>
+          <figure><img src="__IMG_login-official__" alt="Government Official sign-in page"><figcaption>Government Official — violet</figcaption></figure>
+        </div>
+        <p style="margin-top:18px;">No account yet? <strong>Create an account</strong> asks a
+          bidder for a company name; a tender caller or official additionally for a department and
+          state. Or use a demo account straight away:</p>
+        <table class="creds">
+          <tr><th>Role</th><th>Email</th><th>Password</th></tr>
+          <tr><td>Bidder</td><td class="mono">demo@securebid.in</td><td class="mono">demo1234</td></tr>
+          <tr><td>Tender Caller</td><td class="mono">buyer@securebid.in</td><td class="mono">demo1234</td></tr>
+          <tr><td>Government Official</td><td class="mono">official@securebid.in</td><td class="mono">demo1234</td></tr>
+        </table>
+        <div class="callout"><strong>One session at a time.</strong> Signing in on a second tab or
+          device silently signs out the first — SecureBid keeps exactly one active session per
+          account, on purpose.</div>
+        <div class="callout"><strong>Continue with Google.</strong> The Bidder sign-in page also
+          offers a real "Continue with Google" button (Google's own widget) when the server has it
+          configured — SecureBid verifies the credential directly against Google before creating or
+          signing you into a bidder account. No password to remember for that path. Tender Caller
+          and Official accounts are institutional and use email/password only.</div>
+        <div class="callout warn"><strong>New accounts start unverified</strong> (Google sign-ins are
+          pre-verified, since Google already confirmed the email). A banner offers to resend the
+          link; without a mail server configured, the link is printed to the server console rather
+          than emailed. The same applies to password-reset links, and a reset signs out every other
+          session on the account.</div>
+      </section>
+
+      <section id="nav" class="step">
+        <h3><span class="step-no">02</span> How to navigate the app</h3>
+        <p>SecureBid is built like a mobile app on purpose — short, targeted visits, not a document
+          to scroll through. Every portal fixes its <strong>four</strong> most-used features to the
+          bottom of the screen, always visible, and tucks everything else behind a slide-out menu.</p>
+        <div class="fig-row">
+          <figure class="fig-narrow"><img src="__IMG_bidder-dashboard-nav__" alt="Bottom navigation bar on the bidder dashboard"><figcaption>The bottom bar — one tap to any of the four core features.</figcaption></figure>
+          <figure class="fig-narrow"><img src="__IMG_bidder-drawer__" alt="The slide-out menu, open"><figcaption>The menu — everything else, one tap from the hamburger icon.</figcaption></figure>
+        </div>
+        <table class="navmap">
+          <tr><th>Role</th><th>Bottom bar (always visible)</th><th>Menu (tap the hamburger icon)</th></tr>
+          <tr><td>Bidder</td><td>Home · Discover · Pipeline · <strong>Anomaly</strong></td>
+              <td>Portfolio, Analytics, Competitors, Eligibility Parser, Alerts &amp; Saved Searches, Company Profile</td></tr>
+          <tr><td>Tender Caller</td><td>Tenders · Create · Awards · Profile</td><td>Sign out only — all four features already fit the bar</td></tr>
+          <tr><td>Government Official</td><td>Overview · Registry · <strong>Anomaly</strong> · Profile</td><td>Sign out only</td></tr>
+        </table>
+        <p>Colour is also navigation: the top bar's dot, the active bottom-bar icon, and every
+          primary button pick up your portal's colour, so two SecureBid tabs open in different
+          roles are distinguishable at a glance.</p>
+      </section>
+
+      <!-- ============================================================ BIDDER -->
+      <section class="role bidder" id="bidder">
+        <div class="role-band"><span class="role-num">Role</span><span class="role-chip bidder">Bidder / Contractor</span></div>
+        <h2>Discover, price, and track a bid</h2>
+        <p class="role-sub">Everything below lives behind the bottom bar and menu once you're
+          signed in at <code>/login</code>.</p>
+
+        <div class="step" id="b-dashboard">
+          <h3><span class="step-no">1</span> Dashboard</h3>
+          <p>Four tiles orient you immediately: expected value across your live bids, how much
+            working capital is tied up in EMD, your win rate, and how many bids are active right
+            now (plus how many tenders were automatically screened out as ineligible). Below that,
+            a ranked opportunity list sorted by expected profit — tap any row to open it.</p>
+          <figure><img src="__IMG_bidder-dashboard__" alt="Bidder dashboard with KPI tiles and ranked opportunities">
+            <figcaption>The dashboard: KPI tiles, ranked opportunities, and what's closing soon.</figcaption></figure>
+        </div>
+
+        <div class="step" id="b-discover">
+          <h3><span class="step-no">2</span> Discover</h3>
+          <p>Search and filter every live tender by keyword, category, state, or eligibility. Flip
+            on <strong>Eligible only</strong> to hide anything your profile doesn't qualify for, or
+            tap <strong>Save this search</strong> to revisit it later from Alerts &amp; Saved
+            Searches.</p>
+          <figure><img src="__IMG_bidder-discover__" alt="Discover page with filters and a results table">
+            <figcaption>Discover: filter bar, eligibility match column, and days-to-close pills.</figcaption></figure>
+        </div>
+
+        <div class="step" id="b-detail">
+          <h3><span class="step-no">3</span> The pricing recommendation</h3>
+          <p>Open any tender and this is the core of the product. Enter your cost (or leave it
+            blank for 82% of the estimated value) and a target margin, then tap
+            <strong>Recommend a bid</strong>. You get a single recommended bid with its win
+            probability and expected profit, a confidence label telling you how much historical
+            data that estimate rests on, and three named strategies —
+            <em>Conservative</em>, <em>Recommended</em>, and <em>Aggressive</em> — so the choice
+            between margin and throughput is explicit rather than hidden inside one number.</p>
+          <figure><img src="__IMG_bidder-tender-detail__" alt="Tender detail page showing eligibility checks and the pricing recommendation panel">
+            <figcaption>Eligibility match with a generated document checklist, and the pricing panel.</figcaption></figure>
+        </div>
+
+        <div class="step" id="b-pipeline">
+          <h3><span class="step-no">4</span> Pipeline</h3>
+          <p>A Kanban board across five stages — Watching, Preparing, Submitted, Won, Lost. Tap a
+            card to expand it: cards being prepared show a prep checklist you can tick off or add
+            to; cards that won show post-award milestones instead. If a tender caller awards a
+            tender you bid on, your card moves to Won or Lost by itself.</p>
+          <figure><img src="__IMG_bidder-pipeline__" alt="Pipeline Kanban board across five stages">
+            <figcaption>The pipeline board — cards carry the bid amount and days remaining.</figcaption></figure>
+        </div>
+
+        <div class="step" id="b-anomaly">
+          <h3><span class="step-no">5</span> Anomaly — the fourth bottom-bar feature</h3>
+          <p>Six OECD-style structural screens for bid-rigging patterns — Bid Dispersion, L1–L2
+            Spread, Win Concentration, Bid Rotation, Repeated Pairing, and Round-Number Clustering —
+            run across every buyer/category bucket and ranked by risk. It shares the bottom bar
+            with Home, Discover and Pipeline because it's the app's other core differentiator, not
+            an afterthought. Risk shows as <strong>Elevated / Watch / Normal</strong> — deliberately
+            never "corrupt" or "clean" — and every flag explains itself in plain language.</p>
+          <figure><img src="__IMG_bidder-anomaly__" alt="Bidder anomaly detection page with screen-type cards and a risk-ranked table">
+            <figcaption>The six screens explained up front, then every bucket ranked by risk.</figcaption></figure>
+        </div>
+
+        <div class="step" id="b-more">
+          <h3><span class="step-no">6</span> Portfolio, Analytics &amp; the rest (in the menu)</h3>
+          <ul>
+            <li><strong>Portfolio</strong> — given your capital and a maximum bid count, optimises
+              which open tenders to bid on for the best total expected profit, and shows the shadow
+              price of one more lakh of capital.</li>
+            <li><strong>Analytics</strong> — capital deployed vs. available, a win-rate trend, and
+              value by category, built from your own pipeline history as it accumulates.</li>
+            <li><strong>Competitors</strong> — who else bids in a bucket and how, and their win rate
+              across categories.</li>
+            <li><strong>Eligibility Parser</strong> — paste any clause text to see exactly what gets
+              extracted and whether your profile meets it.</li>
+            <li><strong>Alerts &amp; Saved Searches</strong> and <strong>Company Profile</strong> —
+              your notification centre, and the profile data that drives every eligibility check and
+              pricing default above.</li>
+          </ul>
+          <figure><img src="__IMG_bidder-analytics__" alt="Analytics page with win-rate trend and category value charts">
+            <figcaption>Analytics — thin until you've decided a few real bids, by design.</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- ============================================================ CALLER -->
+      <section class="role caller" id="caller">
+        <div class="role-band"><span class="role-num">Role</span><span class="role-chip caller">Tender Caller</span></div>
+        <h2>Publish tenders, award a winner</h2>
+        <p class="role-sub">Signed in at <code>/login/buyer</code>, as the procuring department or
+          PSU. All four features fit the bottom bar — the menu here holds only Sign out.</p>
+
+        <div class="step" id="c-create">
+          <h3><span class="step-no">1</span> Tenders &amp; Create</h3>
+          <p><strong>Tenders</strong> lists everything you've authored with its status — Draft,
+            Published, or Closed — and how many bids it's received. <strong>Create</strong> takes
+            the basics (title, category, state, value, EMD, closing date); paste eligibility clause
+            text into the last field and SecureBid runs the same parser bidders see, structuring
+            your criteria automatically. Save as a draft to keep working, or publish to go live
+            immediately.</p>
+          <figure><img src="__IMG_caller-my-tenders__" alt="Tender caller's My Tenders list">
+            <figcaption>My Tenders — draft and published tenders, with a live submission count.</figcaption></figure>
+          <figure><img src="__IMG_caller-create-tender__" alt="Create tender form">
+            <figcaption>Creating a tender — eligibility text is parsed automatically on save.</figcaption></figure>
+        </div>
+
+        <div class="step" id="c-evaluate">
+          <h3><span class="step-no">2</span> Evaluating and awarding</h3>
+          <p>Open a published tender to see every submission, lowest bid first.
+            <strong>Shortlist</strong> or <strong>Reject</strong> to organise your review, or tap
+            <strong>Award</strong> to pick a winner. Awarding closes the tender, records the award
+            and every bid into the historical data the bidder-side pricing and anomaly-detection
+            tools learn from, and flips every bidder's pipeline card to Won or Lost automatically —
+            in one step that either completes fully or not at all.</p>
+          <figure><img src="__IMG_caller-evaluate__" alt="Evaluating submissions on a published tender, with Shortlist, Reject and Award actions">
+            <figcaption>Evaluating a submission — Award closes the tender for good.</figcaption></figure>
+          <div class="callout caller">A tender can only be awarded once. Trying again on an
+            already-closed tender is rejected outright rather than silently recording a second
+            award.</div>
+        </div>
+      </section>
+
+      <!-- ============================================================ OFFICIAL -->
+      <section class="role official" id="official">
+        <div class="role-band"><span class="role-num">Role</span><span class="role-chip official">Government Official</span></div>
+        <h2>Watch the whole system for anomalies</h2>
+        <p class="role-sub">Signed in at <code>/login/official</code>. Read-only by design — no
+          bidding, no publishing. This portal is where the anomaly-detection system is most fully
+          expressed.</p>
+
+        <div class="step">
+          <h3><span class="step-no">1</span> Overview</h3>
+          <p>System-wide totals — tenders, awards, pipeline value, awarded value — an award-value
+            trend, spend by state, and the tender-calling organisations ranked by total value
+            published.</p>
+          <figure><img src="__IMG_official-overview__" alt="Oversight dashboard with system-wide KPIs and charts">
+            <figcaption>The oversight dashboard aggregates every tender caller at once.</figcaption></figure>
+        </div>
+
+        <div class="step" id="o-anomaly">
+          <h3><span class="step-no">2</span> Anomaly — system-wide detection</h3>
+          <p>The same six structural screens bidders see, run across <strong>every</strong>
+            buyer/category bucket from <strong>every</strong> tender caller, ranked by risk. This is
+            the page a "smart governance / automated public procurement anomaly detection" workflow
+            is actually about: surfacing which buyer/category combinations deserve a closer look,
+            explaining why through six named, plain-language screens, and deliberately never
+            labelling a vendor "corrupt" — these are statistical signals for deciding where to look,
+            not findings.</p>
+          <figure><img src="__IMG_official-anomaly__" alt="Official system-wide anomaly detection page">
+            <figcaption>Every department, one risk-ranked view — Elevated / Watch / Normal, never a verdict.</figcaption></figure>
+        </div>
+
+        <div class="step" id="o-registry">
+          <h3><span class="step-no">3</span> Registry</h3>
+          <p>Every tender from every caller — including drafts and closed ones, which a bidder's
+            Discover page never shows — filterable by status. Nothing is hidden from this view.</p>
+          <figure><img src="__IMG_official-registry__" alt="Tender registry listing tenders from every caller">
+            <figcaption>The registry — the full system, unfiltered by role.</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- ============================================================ SECURITY -->
+      <section id="security" style="margin-top:64px;padding-top:8px;border-top:1px solid var(--ink-200);">
+        <div class="kicker">Reference</div>
+        <h2 style="font-size:24px;margin-top:6px;">Account &amp; security</h2>
+        <ul style="color:var(--ink-700);font-size:14.5px;padding-left:20px;">
+          <li><strong>Single active session</strong> — only one sign-in is valid per account at a
+            time. Signing in elsewhere silently replaces the earlier session rather than running
+            both at once.</li>
+          <li><strong>Real server-side sign-out</strong> — signing out invalidates your session
+            token on the server immediately, not just in your browser.</li>
+          <li><strong>Password resets revoke everything</strong> — resetting your password signs
+            out every other active session on that account.</li>
+          <li><strong>Google sign-in is verified, not trusted blindly</strong> — the credential is
+            checked directly against Google's own servers before a session is created.</li>
+        </ul>
+      </section>
+
+      <!-- ============================================================ GLOSSARY -->
+      <section id="glossary" style="margin-top:56px;padding-top:8px;border-top:1px solid var(--ink-200);">
+        <div class="kicker">Reference</div>
+        <h2 style="font-size:24px;margin-top:6px;">A short glossary</h2>
+        <p class="role-sub">Indian public-procurement terms used throughout the app.</p>
+        <dl class="glossary">
+          <dt>EMD — Earnest Money Deposit</dt>
+          <dd>A refundable deposit a bidder puts down to bid, forfeited if they win and back out.
+            This is the real money "locked up" in the capital tiles.</dd>
+          <dt>L1</dt>
+          <dd>Shorthand for the lowest bid on a tender — the usual winner under price-only
+            evaluation. "L1 ratio" means the winning bid as a fraction of the estimated value.</dd>
+          <dt>MSME / Udyam</dt>
+          <dd>Micro, Small &amp; Medium Enterprises and their registration scheme; MSME-registered
+            bidders often get relaxed turnover thresholds or EMD exemptions, which the eligibility
+            parser accounts for automatically.</dd>
+          <dt>Bidder class — Class I / Class II</dt>
+          <dd>Local-content classification under the Make in India procurement order; some tenders
+            restrict eligibility to a particular class or better.</dd>
+          <dt>Cover bidding</dt>
+          <dd>A collusion pattern where several bidders submit deliberately uncompetitive bids so a
+            pre-agreed member wins — what the anomaly screens are built to surface signs of.</dd>
+        </dl>
+      </section>
+
+      <!-- ============================================================ TROUBLESHOOTING -->
+      <section id="trouble" style="margin-top:56px;padding-top:8px;border-top:1px solid var(--ink-200);">
+        <div class="kicker">Reference</div>
+        <h2 style="font-size:24px;margin-top:6px;">Troubleshooting (running it yourself)</h2>
+        <ul style="color:var(--ink-700);font-size:14.5px;padding-left:20px;">
+          <li>Blank page after sign-in? Build the frontend (<code>npm run build</code> inside
+            <code>frontend/</code>) before starting <code>python run.py</code> — the backend serves
+            those built files.</li>
+          <li>No "Continue with Google" button? It needs a real Google OAuth 2.0 Web Client ID —
+            create one in Google Cloud Console under APIs &amp; Services → Credentials, add this
+            app's URL as an Authorized JavaScript origin, then set <code>GOOGLE_CLIENT_ID</code> in
+            the server's environment. Without it, the button is hidden and email/password still
+            works.</li>
+          <li>Verification or reset email never arrives? Without <code>SMTP_HOST</code> configured,
+            SecureBid logs the email (link included) to the server console instead of sending it.</li>
+          <li>Want a clean demo dataset again? <code>python run.py --reseed</code> wipes the
+            database and regenerates the synthetic corpus, including the three demo accounts above.</li>
+        </ul>
+      </section>
+
+      <footer>SecureBid Field Manual &middot; for anyone opening the app for the first time</footer>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var links = document.querySelectorAll('.tocLink');
+  var sections = Array.from(links).map(function(a){
+    var id = a.getAttribute('href').slice(1);
+    return { link: a, el: document.getElementById(id) };
+  }).filter(function(s){ return s.el; });
+
+  function onScroll(){
+    var y = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s){ if (s.el.offsetTop <= y) current = s; });
+    links.forEach(function(a){ a.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  var menuBtn = document.getElementById('menuBtn');
+  var toc = document.getElementById('toc');
+  if (menuBtn) {
+    menuBtn.addEventListener('click', function(){ toc.classList.toggle('open'); });
+    links.forEach(function(a){ a.addEventListener('click', function(){ toc.classList.remove('open'); }); });
+  }
+})();
+</script>
